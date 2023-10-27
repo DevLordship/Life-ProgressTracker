@@ -3,6 +3,7 @@ import {
     getDatabase,
     ref,
     push,
+    onValue,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const appSettings = {
@@ -22,9 +23,19 @@ addButtonEl.addEventListener("click", function () {
     let inputValue = inputFieldEl.value;
     push(projectListInDB, inputValue);
     clearInputFieldEl();
-
-    appendItemToprojectListEl(inputValue);
 });
+
+onValue(projectListInDB, function (snapshot) {
+    let itemsArray = Object.values(snapshot.val());
+    clearprojectListEl();
+    for (let i = 0; i < itemsArray.length; i++) {
+        appendItemToprojectListEl(itemsArray[i]);
+    }
+});
+
+function clearprojectListEl() {
+    projectListEl.innerHTML = "";
+}
 
 function clearInputFieldEl() {
     inputFieldEl.value = "";
